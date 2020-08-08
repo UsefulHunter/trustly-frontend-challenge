@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Store from './pages/Store';
 import { createGlobalStyle } from 'styled-components';
 
-createGlobalStyle`
+const GlobalStyle = createGlobalStyle`
   html {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -19,7 +19,7 @@ createGlobalStyle`
 
 ReactDOM.render(
   <React.StrictMode>
-    <createGlobalStyle />
+    <GlobalStyle />
     <Store />
   </React.StrictMode>,
   document.getElementById('root')

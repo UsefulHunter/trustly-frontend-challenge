@@ -115,8 +115,19 @@ const ItemSelect = styled.select`
   appearance: none;
   background-color: #ffffff;
   border: 1px solid #e8e8e8;
-  border-radius: 25%;
+  border-radius: 25px;
   width: 70px;
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 18px;
+  color: #8d8d8d;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Ctitle%3Edown-arrow%3C%2Ftitle%3E%3Cg%20fill%3D%22%236B8067%22%3E%3Cpath%20d%3D%22M10.293%2C3.293%2C6%2C7.586%2C1.707%2C3.293A1%2C1%2C0%2C0%2C0%2C.293%2C4.707l5%2C5a1%2C1%2C0%2C0%2C0%2C1.414%2C0l5-5a1%2C1%2C0%2C1%2C0-1.414-1.414Z%22%20fill%3D%22%23000000%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3C%2Fsvg%3E');
+  background-size: 0.6em;
+  background-position: right 5px top 50%;
+  background-repeat: no-repeat;
 `;
 
 const ItemSelector = styled.div`
@@ -164,8 +175,74 @@ export const SearchIcon = () => (
   </svg>
 );
 
+//Mocked data for the Size of the Shoes, that do not came on the API object
+const ShoesSize = [
+  {
+    value: 36,
+  },
+  {
+    value: 37,
+  },
+  {
+    value: 38,
+  },
+  {
+    value: 39,
+  },
+  {
+    value: 40,
+  },
+  {
+    value: 41,
+  },
+  {
+    value: 42,
+  },
+  {
+    value: 43,
+  },
+  {
+    value: 44,
+  },
+];
+
+const ShoesQuantity = [
+  {
+    value: 1,
+  },
+  {
+    value: 2,
+  },
+  {
+    value: 3,
+  },
+  {
+    value: 4,
+  },
+  {
+    value: 5,
+  },
+  {
+    value: 6,
+  },
+  {
+    value: 7,
+  },
+  {
+    value: 8,
+  },
+  {
+    value: 9,
+  },
+];
+
 export const Store = () => {
   const [items, setItems] = useState([]);
+  const [search, setSearch] = useState(items);
+  const [searchResults, setSearchResults] = useState([]);
+  const handleChange = (event) => {
+    setSearch(event.target.value);
+  };
   useEffect(() => {
     const getItems = async () => {
       try {
@@ -184,9 +261,21 @@ export const Store = () => {
         console.log(e);
       }
     };
+
+    const filterResults = items.filter((sneaker) =>
+      sneaker.color.includes(search)
+    );
     getItems();
-  }, []);
-  console.log(items);
+    setSearchResults(filterResults);
+  }, [search]);
+  console.log('items:', items);
+  console.log('searchResults', searchResults);
+
+  const verifyArray = (items, searchResults) => {
+    if (searchResults.length === 0) {
+      return items;
+    } else return searchResults;
+  };
   return (
     <div className="Store">
       <Header>
@@ -208,11 +297,16 @@ export const Store = () => {
       <Main>
         <FilterContainer>
           <SearchIcon />
-          <Filter placeholder="Search for your sneaker"></Filter>
+          <Filter
+            type="text"
+            placeholder="Search for your sneaker"
+            value={search}
+            onChange={handleChange}
+          ></Filter>
         </FilterContainer>
 
         <ItemArea>
-          {items.map((sneaker) => {
+          {searchResults.map((sneaker) => {
             return (
               <Item key={sneaker.id}>
                 <ItemImg
@@ -223,11 +317,23 @@ export const Store = () => {
                 <ItemSelector>
                   <ItemLabel>Size</ItemLabel>
                   <ItemSelect>
-                    <option>41</option>
+                    {ShoesSize.map((size) => {
+                      return (
+                        <option key={size.value} value={size.value}>
+                          {size.value}
+                        </option>
+                      );
+                    })}
                   </ItemSelect>
                   <ItemLabel>Quantity</ItemLabel>
                   <ItemSelect>
-                    <option>1</option>
+                    {ShoesQuantity.map((quantity) => {
+                      return (
+                        <option key={quantity.value} value={quantity.value}>
+                          {quantity.value}
+                        </option>
+                      );
+                    })}
                   </ItemSelect>
                 </ItemSelector>
                 <ItemPrice>$ {sneaker.price}</ItemPrice>
