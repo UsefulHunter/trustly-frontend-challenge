@@ -262,20 +262,16 @@ export const Store = () => {
       }
     };
 
+    getItems();
+  }, []);
+  useEffect(() => {
     const filterResults = items.filter((sneaker) =>
       sneaker.color.includes(search)
     );
-    getItems();
     setSearchResults(filterResults);
-  }, [search]);
+  }, [search, items]);
   console.log('items:', items);
   console.log('searchResults', searchResults);
-
-  const verifyArray = (items, searchResults) => {
-    if (searchResults.length === 0) {
-      return items;
-    } else return searchResults;
-  };
   return (
     <div className="Store">
       <Header>
